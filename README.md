@@ -43,7 +43,7 @@ This sources have helped a lot to get this working.
 * Some Wires
 
 # Circuit Diagramm
-For this Smart Meter you need a external Power source, other devices/models don't need that - if you have another device please check ask your power network provider for a pinout diagram or documentation.
+For this Smart Meter you need a external Power source, other devices/models don't need that - if you have another device please ask your power network provider for a pinout diagram or documentation.
 
 # Customer Interface Pinout
 
@@ -58,8 +58,12 @@ Pin 5 sends out the data - you need a pull up resistor (i'm using a 10k resistor
 ![Pinout](docs/images/pinout_2.png)
 
 
-Basically i used this diagram (but with a ESP32) for this project from (https://github.com/saghonfly/shrdzm/raw/dev/hardware/IM350_2.png)
+Basically i used this diagram (but with another esp32 board [az-delivery ESP32 D1 Mini NodeMCU](https://www.az-delivery.de/en/products/esp32-d1-mini?_pos=2&_sid=4f329af42&_ss=r))
+
+**Source: (https://github.com/saghonfly/shrdzm/raw/dev/hardware/IM350_2.png)**
 ![](docs/images/circuit.png)
+
+
 
 # Example Message
 ![](docs/images/message.png)
