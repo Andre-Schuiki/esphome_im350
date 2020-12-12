@@ -93,3 +93,9 @@ switch:
   - platform: restart
     name: IM350_Restart
 ```
+
+# Example Output ESPHome Log
+![](../docs/images/example_output_esphome.png)
+
+# Example Grafana Graphs
+![](../docs/images/grafana_example.png)
