@@ -29,7 +29,7 @@ This sources have helped a lot to get this working.
 * [http://www.weigu.lu/microcontroller/smartyReader_P1/index.html](http://www.weigu.lu/microcontroller/smartyReader_P1/index.html)
 * [http://www.gurux.fi/](http://www.gurux.fi/)
 * [Gurux DLMS Director Tool](http://www.gurux.fi/Downloads/gxdlmsdirector46/GXDLMSDirector.application) with this tool you can decrypt the message (if you have the decryption key) this was very useful!
-* [https://gitlab.com/astrnad/szreader](https://gitlab.com/astrnad/szreader) Python project is you like to use a raspberry
+* [https://gitlab.com/astrnad/szreader](https://gitlab.com/astrnad/szreader) Python project if you like to use a raspberry
 
 # Requirements
 * 1xESP32 board (ESP8622 should also work, but was not tested)
@@ -63,8 +63,6 @@ Basically i used this diagram (but with a ESP32) for this project from (https://
 
 # Example Message
 ![](docs/images/message.png)
-# Picture with Strip board/ESP/Cabling
-todo
 
 # Workflow
 1. Set Pin2 of Customer Interface to High
@@ -75,7 +73,6 @@ todo
 6. Validate decrypted cipher text with current date cause validate with tag is not working..
 7. Parse decrypted cipher text
 8. Publish data to ESPHome
-
 
 # Decrypting the message
 Messages are encrypted with AES128-GCM. 
