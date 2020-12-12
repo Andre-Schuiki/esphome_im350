@@ -6,7 +6,9 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 Example Script to convert and decrypt message from im350 smart meter.
 Usage: Just enter enter the message from you smart meter and your decryption key.
 """
+# Hex String, 246 Chars // 123 Bytes, Starting/Stopping with 7E
 message_hex_string = '<Your Message>'
+# Hex String 32 Chars // 16 Bytes, you get the key from you provider!
 decryption_key_hex_string = '<Your Decryption Key>'
 
 
