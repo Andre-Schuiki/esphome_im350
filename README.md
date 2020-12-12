@@ -42,6 +42,9 @@ This sources have helped a lot to get this working.
 * Some DuPont connectors and a crimp tool
 * Some Wires
 
+# Data Output of the Customer Interface
+![](docs/images/data_output_customer_interface.png)
+
 # Circuit Diagramm
 For this Smart Meter you need a external Power source, other devices/models don't need that - if you have another device please ask your power network provider for a pinout diagram or documentation.
 
@@ -62,8 +65,6 @@ Basically i used this diagram (but with another esp32 board [az-delivery ESP32 D
 
 **Source: (https://github.com/saghonfly/shrdzm/raw/dev/hardware/IM350_2.png)**
 ![](docs/images/circuit.png)
-
-
 
 # Example Message
 ![](docs/images/message.png)
