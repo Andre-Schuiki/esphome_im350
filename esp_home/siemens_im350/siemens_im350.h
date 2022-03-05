@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
-#include "esphome/core/component.h"
-#include "esphome/core/esphal.h"
 #include "esphome/components/sensor/sensor.h"
+// 20220306 changes for newer esphome version
+#include <esp_attr.h>
+#include "esphome/core/hal.h"
+#include <Arduino.h>
 
 namespace esphome {
     namespace siemens_im350 {
@@ -21,10 +23,11 @@ namespace esphome {
             void set_ntp_gmt_offset(int ntp_gmt_offset_sec) { ntp_gmt_offset_sec_ = ntp_gmt_offset_sec; };
             void set_ntp_daylight_offset(int ntp_daylight_offset_sec) { ntp_daylight_offset_sec_ = ntp_daylight_offset_sec; };
             
-            void set_trigger_pin(GPIOPin *trigger_pin) { trigger_pin_ = trigger_pin; }
-            void set_uart_rx_pin(GPIOPin *uart_rx_pin) { uart_rx_pin_ = uart_rx_pin; }
-            void set_uart_tx_pin(GPIOPin *uart_tx_pin) { uart_tx_pin_ = uart_tx_pin; }
-            void set_builtin_led_pin(GPIOPin *builtin_led_pin) { builtin_led_pin_ = builtin_led_pin; }
+            // 20220306 GPIOPin changed in newer esphome version
+            void set_trigger_pin(InternalGPIOPin *trigger_pin) { trigger_pin_ = trigger_pin; }
+            void set_uart_rx_pin(InternalGPIOPin *uart_rx_pin) { uart_rx_pin_ = uart_rx_pin; }
+            void set_uart_tx_pin(InternalGPIOPin *uart_tx_pin) { uart_tx_pin_ = uart_tx_pin; }
+            void set_builtin_led_pin(InternalGPIOPin *builtin_led_pin) { builtin_led_pin_ = builtin_led_pin; }
 
             void set_counter_reading_p_in(sensor::Sensor *counter_reading_p_in) { counter_reading_p_in_ = counter_reading_p_in; }
             void set_counter_reading_p_out(sensor::Sensor *counter_reading_p_out) { counter_reading_p_out_ = counter_reading_p_out; }
@@ -42,6 +45,7 @@ namespace esphome {
             void parse_timestamp();
             bool message_date_valid();
             bool message_valid();
+            bool getLocalTime(struct tm * info, uint32_t ms);
             bool get_local_time();
 
             // ========== INTERNAL METHODS ==========
@@ -59,10 +63,10 @@ namespace esphome {
             bool use_test_data_;
             uint8_t test_data_[123];
             uint8_t decryption_key_[16];
-            GPIOPin *trigger_pin_;
-            GPIOPin *uart_rx_pin_;
-            GPIOPin *uart_tx_pin_;
-            GPIOPin *builtin_led_pin_;
+            InternalGPIOPin *trigger_pin_;
+            InternalGPIOPin *uart_rx_pin_;
+            InternalGPIOPin *uart_tx_pin_;
+            InternalGPIOPin *builtin_led_pin_;
             sensor::Sensor *counter_reading_p_in_;
             sensor::Sensor *counter_reading_p_out_;
             sensor::Sensor *counter_reading_q_in_;
