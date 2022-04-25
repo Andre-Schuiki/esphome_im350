@@ -57,6 +57,7 @@ CONF_MAX_WAIT_TIME_FOR_READING_DATA = 'max_wait_time_for_reading_data'
 CONF_NTP_SERVER = 'ntp_server'
 CONF_NTP_GMT_OFFSET = 'ntp_gmt_offset'
 CONF_NTP_DAYLIGHT_OFFSET = 'ntp_daylight_offset'
+CONF_INVERT_SERIAL = 'invert_serial'
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(SmartMeterSensorComponent),
@@ -64,6 +65,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Required(CONF_TRIGGER_PIN): pins.gpio_output_pin_schema,
     cv.Required(CONF_RX_PIN): pins.gpio_output_pin_schema,
     cv.Required(CONF_TX_PIN): pins.gpio_output_pin_schema,
+    cv.Optional(CONF_INVERT_SERIAL, default=False): boolean,
 
     cv.Optional(CONF_USE_TEST_DATA, default=False): boolean,
     cv.Optional(CONF_TEST_DATA): validate_test_data,
@@ -76,12 +78,12 @@ CONFIG_SCHEMA = cv.Schema({
     
     cv.Optional(CONF_BUILTIN_LED_GPIO, default=2): pins.gpio_output_pin_schema,
 
-    cv.Optional(CONF_COUNTER_READING_P_IN): sensor.sensor_schema(UNIT_WATT_HOURS, ICON_POWER, 2),
-    cv.Optional(CONF_COUNTER_READING_P_OUT): sensor.sensor_schema(UNIT_WATT_HOURS, ICON_POWER, 2),
-    cv.Optional(CONF_COUNTER_READING_Q_IN): sensor.sensor_schema(UNIT_VOLT_AMPS_REACTIVE_HOURS, ICON_POWER, 2),
-    cv.Optional(CONF_COUNTER_READING_Q_OUT): sensor.sensor_schema(UNIT_VOLT_AMPS_REACTIVE_HOURS, ICON_POWER, 2),
-    cv.Optional(CONF_POWER_USAGE_IN): sensor.sensor_schema(UNIT_WATT, ICON_POWER, 2),
-    cv.Optional(CONF_POWER_USAGE_OUT): sensor.sensor_schema(UNIT_WATT, ICON_POWER, 2),
+    cv.Optional(CONF_COUNTER_READING_P_IN): sensor.sensor_schema(unit_of_measurement=UNIT_WATT_HOURS, icon=ICON_POWER, accuracy_decimals=2),
+    cv.Optional(CONF_COUNTER_READING_P_OUT): sensor.sensor_schema(unit_of_measurement=UNIT_WATT_HOURS, icon=ICON_POWER, accuracy_decimals=2),
+    cv.Optional(CONF_COUNTER_READING_Q_IN): sensor.sensor_schema(unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE_HOURS, icon=ICON_POWER, accuracy_decimals=2),
+    cv.Optional(CONF_COUNTER_READING_Q_OUT): sensor.sensor_schema(unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE_HOURS, icon=ICON_POWER, accuracy_decimals=2),
+    cv.Optional(CONF_POWER_USAGE_IN): sensor.sensor_schema(unit_of_measurement=UNIT_WATT, icon=ICON_POWER, accuracy_decimals=2),
+    cv.Optional(CONF_POWER_USAGE_OUT): sensor.sensor_schema(unit_of_measurement=UNIT_WATT, icon=ICON_POWER, accuracy_decimals=2),
 }).extend(cv.polling_component_schema('5s')).extend(cv.COMPONENT_SCHEMA)
 
 
@@ -99,6 +101,9 @@ def to_code(config):
 
     tx_pin = yield cg.gpio_pin_expression(config[CONF_TX_PIN])
     cg.add(var.set_uart_tx_pin(tx_pin))
+
+    if CONF_INVERT_SERIAL in config:
+        cg.add(var.set_uart_inverted(config[CONF_INVERT_SERIAL]))
 
     builtin_led_pin = yield cg.gpio_pin_expression(config[CONF_BUILTIN_LED_GPIO])
     cg.add(var.set_builtin_led_pin(builtin_led_pin))
