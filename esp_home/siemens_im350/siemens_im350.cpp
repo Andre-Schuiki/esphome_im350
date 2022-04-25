@@ -2,8 +2,10 @@
 #define _GLIBCXX_USE_C99 1
 #include "siemens_im350.h"
 #include "esphome/core/log.h"
+
 #include <iostream>
 #include <Arduino.h>
+
 #include <Crypto.h>
 #include <AES.h>
 #include <GCM.h>
@@ -64,8 +66,9 @@ namespace esphome {
             this->trigger_pin_->digital_write(false);
             this->builtin_led_pin_->setup();
             this->trigger_pin_->digital_write(false);
-            
-            Serial2.begin(115200, SERIAL_8N1, this->uart_rx_pin_->get_pin(), this->uart_tx_pin_->get_pin());
+            // if using a transistor set invertserial to false!
+            bool invertserial=invert_serial_;
+            Serial2.begin(115200, SERIAL_8N1, this->uart_rx_pin_->get_pin(), this->uart_tx_pin_->get_pin(), invertserial);
         }
         void SmartMeterSensorComponent::update() {
             //init and get the time
@@ -101,6 +104,7 @@ namespace esphome {
             LOG_PIN("  Trigger Pin: ", this->trigger_pin_);
             LOG_PIN("  UART RX Pin: ", this->uart_rx_pin_);
             LOG_PIN("  UART TX Pin: ", this->uart_tx_pin_);
+            ESP_LOGCONFIG(TAG, "  Invert UART : %s", this->invert_serial_ ? "true" : "false");
             LOG_PIN("  Builtin LED Pin: ", this->builtin_led_pin_);
             ESP_LOGCONFIG(TAG, "  Delay befor reading data : %d", this->delay_before_reading_data_);
             ESP_LOGCONFIG(TAG, "  Maximum time for reading data : %d", this->max_wait_time_for_reading_data_);
@@ -166,7 +170,7 @@ namespace esphome {
             else {
                 ESP_LOGD(TAG, "Try to read data from serial port.");
                 memset(message, 0, 123);
-
+                
                 int cnt = 0;
                 int readBuffer = 250;
 
@@ -312,7 +316,7 @@ namespace esphome {
             }
         }
 
-        // 20220306 getLocalTime was no longer available in esphome 2022.2.6
+        // getLocalTime was no longer available in esphome 2022.2.6
         bool SmartMeterSensorComponent::getLocalTime(struct tm * info, uint32_t ms)
         {
             uint32_t start = millis();
