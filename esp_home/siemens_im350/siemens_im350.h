@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
-#include "esphome/components/sensor/sensor.h"
-// 20220306 changes for newer esphome version
 #include <esp_attr.h>
 #include "esphome/core/hal.h"
+#include "esphome/components/sensor/sensor.h"
 #include <Arduino.h>
+
 
 namespace esphome {
     namespace siemens_im350 {
@@ -23,10 +23,10 @@ namespace esphome {
             void set_ntp_gmt_offset(int ntp_gmt_offset_sec) { ntp_gmt_offset_sec_ = ntp_gmt_offset_sec; };
             void set_ntp_daylight_offset(int ntp_daylight_offset_sec) { ntp_daylight_offset_sec_ = ntp_daylight_offset_sec; };
             
-            // 20220306 GPIOPin changed in newer esphome version
             void set_trigger_pin(InternalGPIOPin *trigger_pin) { trigger_pin_ = trigger_pin; }
             void set_uart_rx_pin(InternalGPIOPin *uart_rx_pin) { uart_rx_pin_ = uart_rx_pin; }
             void set_uart_tx_pin(InternalGPIOPin *uart_tx_pin) { uart_tx_pin_ = uart_tx_pin; }
+            void set_uart_inverted(bool invert_serial) { invert_serial_ = invert_serial; };
             void set_builtin_led_pin(InternalGPIOPin *builtin_led_pin) { builtin_led_pin_ = builtin_led_pin; }
 
             void set_counter_reading_p_in(sensor::Sensor *counter_reading_p_in) { counter_reading_p_in_ = counter_reading_p_in; }
@@ -66,6 +66,7 @@ namespace esphome {
             InternalGPIOPin *trigger_pin_;
             InternalGPIOPin *uart_rx_pin_;
             InternalGPIOPin *uart_tx_pin_;
+            bool invert_serial_;
             InternalGPIOPin *builtin_led_pin_;
             sensor::Sensor *counter_reading_p_in_;
             sensor::Sensor *counter_reading_p_out_;
