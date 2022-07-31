@@ -4,7 +4,7 @@ from esphome.config_validation import string_strict, Invalid, boolean, int_, str
 from esphome import pins
 from esphome.components import sensor
 from esphome.const import CONF_ECHO_PIN, CONF_ID, CONF_TRIGGER_PIN, \
-    CONF_TIMEOUT, UNIT_WATT, UNIT_WATT_HOURS, UNIT_VOLT_AMPS_REACTIVE, CONF_BINDKEY, CONF_RX_PIN, CONF_TX_PIN, ICON_POWER
+    CONF_TIMEOUT, UNIT_WATT, UNIT_WATT_HOURS, UNIT_VOLT_AMPS_REACTIVE, CONF_BINDKEY, CONF_RX_PIN, CONF_TX_PIN, ICON_POWER, STATE_CLASS_TOTAL_INCREASING
 
 siemens_im350_ns = cg.esphome_ns.namespace('siemens_im350')
 SmartMeterSensorComponent = siemens_im350_ns.class_('SmartMeterSensorComponent', sensor.Sensor, cg.PollingComponent)
@@ -78,8 +78,8 @@ CONFIG_SCHEMA = cv.Schema({
     
     cv.Optional(CONF_BUILTIN_LED_GPIO, default=2): pins.gpio_output_pin_schema,
 
-    cv.Optional(CONF_COUNTER_READING_P_IN): sensor.sensor_schema(unit_of_measurement=UNIT_WATT_HOURS, icon=ICON_POWER, accuracy_decimals=2),
-    cv.Optional(CONF_COUNTER_READING_P_OUT): sensor.sensor_schema(unit_of_measurement=UNIT_WATT_HOURS, icon=ICON_POWER, accuracy_decimals=2),
+    cv.Optional(CONF_COUNTER_READING_P_IN): sensor.sensor_schema(unit_of_measurement=UNIT_WATT_HOURS, icon=ICON_POWER, accuracy_decimals=2, state_class=STATE_CLASS_TOTAL_INCREASING),
+    cv.Optional(CONF_COUNTER_READING_P_OUT): sensor.sensor_schema(unit_of_measurement=UNIT_WATT_HOURS, icon=ICON_POWER, accuracy_decimals=2, state_class=STATE_CLASS_TOTAL_INCREASING),
     cv.Optional(CONF_COUNTER_READING_Q_IN): sensor.sensor_schema(unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE_HOURS, icon=ICON_POWER, accuracy_decimals=2),
     cv.Optional(CONF_COUNTER_READING_Q_OUT): sensor.sensor_schema(unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE_HOURS, icon=ICON_POWER, accuracy_decimals=2),
     cv.Optional(CONF_POWER_USAGE_IN): sensor.sensor_schema(unit_of_measurement=UNIT_WATT, icon=ICON_POWER, accuracy_decimals=2),
