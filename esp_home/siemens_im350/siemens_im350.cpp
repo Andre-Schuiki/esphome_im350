@@ -63,12 +63,13 @@ namespace esphome {
         void SmartMeterSensorComponent::setup() {
             ESP_LOGCONFIG(TAG, "Setting up SmartMeter Sensor...");
             this->trigger_pin_->setup();
-            this->trigger_pin_->digital_write(false);
+            // this->trigger_pin_->digital_write(false);
             this->builtin_led_pin_->setup();
-            this->trigger_pin_->digital_write(false);
+            // this->trigger_pin_->digital_write(false);
             // if using a transistor set invertserial to false!
             bool invertserial=invert_serial_;
             Serial2.begin(115200, SERIAL_8N1, this->uart_rx_pin_->get_pin(), this->uart_tx_pin_->get_pin(), invertserial);
+            this->trigger_pin_->digital_write(true);
         }
         void SmartMeterSensorComponent::update() {
             //init and get the time
@@ -172,24 +173,46 @@ namespace esphome {
                 memset(message, 0, 123);
                 
                 int cnt = 0;
-                int readBuffer = 250;
-
-                this->builtin_led_pin_->digital_write(true);
-                this->trigger_pin_->digital_write(true);
-                delay(delay_before_reading_data_);
-                unsigned long requestMillis = millis();
-                while ((Serial2.available()) && (cnt < readBuffer) && (millis()-requestMillis <= max_wait_time_for_reading_data_)) {
-                message[cnt] = Serial2.read();
-                if (message[0] != 0x7E && cnt == 0) {
-                    continue;
+                uint32_t act_time;
+                act_time=millis();
+                while (message[0] != 0x7E && (millis() - act_time < max_wait_time_for_reading_data_)) {
+                if (Serial2.available()) { message[0] = Serial2.read(); }
                 }
-                else {
+                if (message[0] == 0x7E) { // No timeout
                     cnt++;
+                    while ( message[cnt] != 0xA0 && (millis() - act_time < max_wait_time_for_reading_data_)) {
+                        if (Serial2.available()) { message[cnt] = Serial2.read(); }
+                        delay(1);
+                    }
+                    if (message[1] == 0xA0) { // No timeout
+                        cnt++;
+                        while ( cnt < 123 && (millis() - act_time < max_wait_time_for_reading_data_) ) {
+                        if (Serial2.available()) { message[cnt] = Serial2.read(); cnt++; }
+                        }
+                    }
                 }
+                if (cnt != 123) {
+                    memset(message, 0, 123);
+                    cnt=0;
                 }
+                // int readBuffer = 250;
 
-                this->builtin_led_pin_->digital_write(false);
-                this->trigger_pin_->digital_write(false);
+                // this->builtin_led_pin_->digital_write(true);
+                // this->trigger_pin_->digital_write(true);
+                // delay(delay_before_reading_data_);
+                // unsigned long requestMillis = millis();
+                // while ((Serial2.available()) && (cnt < readBuffer) && (millis()-requestMillis <= max_wait_time_for_reading_data_)) {
+                // message[cnt] = Serial2.read();
+                // if (message[0] != 0x7E && cnt == 0) {
+                //     continue;
+                // }
+                // else {
+                //     cnt++;
+                // }
+                // }
+
+                // this->builtin_led_pin_->digital_write(false);
+                // this->trigger_pin_->digital_write(false);
             }
         ESP_LOGD(TAG, "Done with reading data.");
         ESP_LOGD(TAG, "Received message: %s", hexencode(message, 123).c_str());
